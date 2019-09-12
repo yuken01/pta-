@@ -1,0 +1,119 @@
+#include <iostream>
+#include <cmath>
+//We will use sqrt function.
+
+
+//原理：输入数字和符号；经过计算后，给出多余数字和最外层字符显示数；利用最外层字符显示数逐行输出，显示多余数字。
+//The core princple: First, we import the number and the character; and after calculating, we can get 
+//the redundance value (acronym: RedunVal) and the number of characters of the first row
+//(acronym: FirRowCharNum); Finally, we utilize FirRowCharNum to display characters row by row and RedunVal.
+
+
+//输入函数 The input function of two data
+void input2(int& num, char& ch) {
+	std::cin >> num;
+	std::cin >> ch;
+}
+//计算函数 The calculating function: the result is the change of RedunVal and FirRowCharNum.
+void calculating(int num,int& RedunVal, int& FirRowCharNum) {
+	//数字逐个减去一，2*三，2*五，2*七……，直到它变成负数，知道RedunVal是多少了
+	//Subtract 1,2*3,2*5,2*7... from num succesively until the difference is negatice,
+	//then we can get RedunVal.
+	//倒数第二个充当减数的奇数，就是FirRowCharNum
+	//The last but one odd subtrahend is FirRowCharNum at that time.
+
+	//我认为还有另外一种不用循环就能直接得出RedunVal和FirRowCharNum的方法，需要一些数学技巧。
+	//I opine that there exists another way to directly get RedunVal and FirRowCharNum without loop, 
+	//but it requires some mathematical artifice.
+
+	//第n个沙漏图案共需要2*n*n-1个字符，FirRowCharNum=2*n-1.
+	//The nth hourglass pattern requires 2*n*n-1 characters in all, and FirRowCharNum=2*n-1.
+
+	//We truncate the square root of (num+1)/2 ,so we get the n, the hourglass pattern value (2*n*n-1) and FirRowCharNum ,thus RedunVal.
+
+	num -= 1;//Firstly, subtract 1 from num.
+	int odd_value = 3;
+	for (; (num - 2*odd_value >= 0) ; odd_value += 2) {
+		num -= 2 * odd_value;
+		//I don't know why it cannot be placed in the for-condition section with &&. 
+		//What the compiler said is lvalue cannot be amended. Why the reference is lvalue and cannot be placed in for-condition partition?
+		//std::cout << num << "  " << odd_value << std::endl;
+	}
+	//for (initial;condition;increment){statements;}
+	RedunVal = num;
+	FirRowCharNum = odd_value -= 2;
+	//std::cout<<"RedunVal:" << RedunVal << " FirRowCharNum: " << FirRowCharNum<<std::endl;
+}
+
+void calculating2(int num, int& RedunVal, int& FirRowCharNum) {
+	//第n个沙漏图案共需要2*n*n-1个字符，FirRowCharNum=2*n-1.
+	//The nth hourglass pattern requires 2*n*n-1 characters in all, and FirRowCharNum=2*n-1.
+
+	//We truncate the square root of (num+1)/2 ,so we get the n, the hourglass pattern value (2*n*n-1) and FirRowCharNum ,thus RedunVal.
+	int n = floor(sqrt((num + 1) / 2));
+	//std::cout << "n: " << n << "\n";
+	FirRowCharNum = 2 * n - 1;
+	//std::cout << "FirRowCharNum: " << FirRowCharNum<<"\n";
+	RedunVal = num - 2 * n * n + 1;
+	//std::cout << "RedunVal: " << RedunVal << "\n";
+}
+
+
+
+
+
+void DemonstrateBlank(int SpecialCharNum,int FirRowCharNum) {
+	
+	for (int BlankNum = (FirRowCharNum - SpecialCharNum) / 2; BlankNum > 0; BlankNum--)
+		std::cout << " ";
+}
+
+void OneLineOutput(int SpecialCharNum, int FirRowCharNum,char ch) {
+	//std::cout << SpecialCharNum;
+	DemonstrateBlank(SpecialCharNum, FirRowCharNum);
+	for (int IterSpecialCharNum = SpecialCharNum; IterSpecialCharNum > 0; IterSpecialCharNum--) {
+		std::cout << ch;
+	}
+//	DemonstrateBlank(SpecialCharNum, FirRowCharNum);
+	std::cout << std::endl;
+}
+
+//The called function must be put before calling function, 
+//or the error "undefined identifier" occurs.
+void Display(int RedunVal, int FirRowCharNum,char ch) {
+	//SpecialCharNum is
+	//the number of special characters in one line,
+	//which will be used for iteration.
+	int SpecialCharNum = FirRowCharNum;
+	for (;SpecialCharNum >= 1; SpecialCharNum -= 2)
+	{
+		OneLineOutput(SpecialCharNum, FirRowCharNum,ch);
+	}
+	for (SpecialCharNum +=4; SpecialCharNum <= FirRowCharNum; SpecialCharNum += 2)
+	{
+		OneLineOutput(SpecialCharNum, FirRowCharNum,ch);
+	}
+
+	std::cout << RedunVal;
+}
+//打印当前一行函数,包括打印空字符，打印特殊字符两个函数
+
+
+int main() {
+	int num = 0;//number 
+	char ch = 'a';//character
+
+	//for (num = 1; num <= 19;num++) {
+		//std::cout << "when number is " << num << "\n";
+		input2(num, ch);
+		int RedunVal = 0, FirRowCharNum = 0;
+		calculating2(num, RedunVal, FirRowCharNum);
+		Display(RedunVal, FirRowCharNum, ch);
+
+	//	std::cout << "\n" << "\n";
+	//}
+
+
+	//std::cout << num << ch;
+	return 0;
+}
