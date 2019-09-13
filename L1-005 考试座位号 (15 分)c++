@@ -1,0 +1,54 @@
+//THIS PROGRAM IS DEALING WITH THE PTA PROBELM
+//@https://pintia.cn/problem-sets/994805046380707840/problems/994805140211482624
+//It is dealt with class so as to use dinamically stored.
+//Use the pointer so I can quickly find the data to be enquired.
+
+
+#include <iostream>
+#include <string>
+#include <fstream>
+int main(){
+
+//class definition
+	class s {
+	public:
+		std::string n1;
+		int n3;
+	};
+//n: 
+//the abbreviation of number
+	/*student:s*/
+
+
+//input
+	int n = 0;
+	std::cin >> n;
+	s* ps = new s[n+1];
+	//pointer of s 
+
+
+	while (n--) {
+		std::string tn1;//temporal number 1
+		int tn2;
+		std::cin >> tn1 >> tn2;
+		ps[tn2].n1 = tn1;
+		std::cin >> ps[tn2].n3;
+	}
+
+
+//output
+	std::cin >> n;//actually m 
+//	to be enquired
+	while (n--) {
+		int tn2;
+		std::cin >> tn2;
+		std::cout << ps[tn2].n1 << " "
+			<< ps[tn2].n3<<"\n";
+	}
+
+
+//delete
+	delete[] ps;
+	return 0;
+
+}
